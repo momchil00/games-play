@@ -34,7 +34,7 @@ addCommnet,
             <h1>Game Details</h1>
             <div className="info-section">
                 <div className="game-header">
-                    <img className="game-img" src={game.imageUrl} alt="" />
+                    <img className="game-img" src={game.imageUrl} />
                     <h1>{game.title}</h1>
                     <span className="levels">MaxLevel:{game.maxLevel}</span>
                     <p className="type">{game.category}</p>
@@ -46,16 +46,16 @@ addCommnet,
                 <div className="details-comments">
                     <h2>Comments:</h2>
                     <ul>
-                        {/* list all comments for current game (If any) */}
-                        <li className="comment">
-                            <p>Content: I rate this one quite highly.</p>
-                        </li>
-                        <li className="comment">
-                            <p>Content: The best game.</p>
-                        </li>
+                        {game.comments?.map(x =>
+                            <li className="comment" >
+                                <p>{x}</p>
+                            </li>
+                            )}
                     </ul>
-                    {/* Display paragraph: If there are no games in the database */}
+                    {game.comments &&
                     <p className="no-comment">No comments.</p>
+                    }
+                    {/* Display paragraph: If there are no games in the database */}
                 </div>
                 {/* Edit/Delete buttons ( Only for creator of this game )  */}
                 <div className="buttons">
