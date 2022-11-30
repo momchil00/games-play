@@ -9,7 +9,7 @@ addCommnet,
 
     const [comment,setComment] = useState({
         username: '',
-        comment: ''
+        comment: '',
     });
 
     const game = games.find(x => x._id === gameId);
@@ -21,6 +21,7 @@ addCommnet,
     }
 
     const onChange = (e) => {
+
         setComment(state => ({
             ...state,
             [e.target.name]: e.target.value
@@ -29,6 +30,8 @@ addCommnet,
         }));
     };
 
+
+console.log(gameId);
     return (
         <section id="game-details">
             <h1>Game Details</h1>

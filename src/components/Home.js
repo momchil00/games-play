@@ -3,7 +3,6 @@ const Home = ({
     games
 }) => {
 
-
     return (
         <section id="welcome-world">
             <div className="welcome-message">
