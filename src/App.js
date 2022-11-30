@@ -14,6 +14,18 @@ import GameDetails from './components/GameDetails';
 function App() {
   const [games, setGames] = useState([]);
 
+  const addCommnet = (gameId, comment) => {
+    setGames(state => {
+      const game = state.find(x => x._id === gameId);//namira id-to na igrata koqto e v momenta(na koqto iskame da dobavi komentar)
+      const comments = game.comments || [];// suzdava se masiv s komenatri ili ako nqma pravq prazen masivv
+      comments.push(comment)//dobavqme noviq komentar
+      return [//tova promenq state 
+        ...state.filter(x => x._id !== gameId),//pusni vsichki igri koito ne otgovarqt na tazi koqto iskame da dobawim 
+        {...game.comments},//dobavi nov obekt kato i dobavq noviq komentar
+      ];
+    })
+  }
+
   useEffect(() => {
       gameServices.getAll()
           .then(result => {
@@ -21,17 +33,20 @@ function App() {
           })
   }, []);
 
+  
+
   return (
     <div id="box">
       <Header />
       <main id="main-content">
         <Routes>
           <Route path="/" element ={<Home games={games}/>}/>
+          <Route path="/logout" element ={<Home />}/>
           <Route path="/login" element ={<Login/>}/>
           <Route path="/register" element ={<Register/>}/>
           <Route path="/create" element ={<CreateGame/>}/>
           <Route path="/catalog" element ={<Catalog games={games}/>}/>
-          <Route path="/catalog/:gameId" element ={<GameDetails games={games}/>}/>
+          <Route path="/catalog/:gameId" element ={<GameDetails games={games} addCommnet={addCommnet}/>}/>
 
         </Routes>
 
