@@ -1,6 +1,6 @@
 import React from 'react'
 
-const GameDetails = () => {
+const GameDetails = ({games}) => {
     return (
         <section id="game-details">
             <h1>Game Details</h1>
@@ -12,9 +12,9 @@ const GameDetails = () => {
                     <p className="type">Action, Crime, Fantasy</p>
                 </div>
                 <p className="text">
-                    Set in a world where fantasy creatures live side by side with humans. A
+                     in a world where fantasy creatures live side by side with humans. A
                     human cop is forced to work with an Orc to find a weapon everyone is
-                    prepared to kill for. Set in a world where fantasy creatures live side
+                    prepared to kill for.Set Set in a world where fantasy creatures live side
                     by side with humans. A human cop is forced to work with an Orc to find a
                     weapon everyone is prepared to kill for.
                 </p>
