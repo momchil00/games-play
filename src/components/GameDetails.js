@@ -12,6 +12,10 @@ addCommnet,
         comment: '',
     });
 
+    const [error,setError] = useState({
+        username: '',
+        comment: '',
+    });
     const game = games.find(x => x._id === gameId);
     
     const addCommentHandler = (e) => {
@@ -21,6 +25,7 @@ addCommnet,
     }
 
     const onChange = (e) => {
+        e.preventDefault();
 
         setComment(state => ({
             ...state,
@@ -29,6 +34,17 @@ addCommnet,
 
         }));
     };
+
+    const validateUsername = (e)=> {
+        const username = e.target.value;
+        
+        if (username == e.target.length < 4) {
+            setError(state => ({
+                ...state,
+                username: 'Username must ber longer than 3 symbols'
+            }));
+        }
+    }
 
 
 console.log(gameId);
@@ -80,6 +96,7 @@ console.log(gameId);
                     name="username" 
                     placeholder ="John Doe"
                     onChange={onChange}
+                    onBlur={validateUsername}
                     value = {comment.username}
 
                     />
