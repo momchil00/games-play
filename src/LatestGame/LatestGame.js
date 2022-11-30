@@ -19,6 +19,7 @@ const LatestGame = ({
             <div className="data-buttons">
                 <a href="/#" className="btn details-btn">
                     Details
+                    
                 </a>
             </div>
         </div>
