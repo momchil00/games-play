@@ -13,6 +13,7 @@ import uniqid from 'uniqid';
 
 function App() {
   const [games, setGames] = useState([]);
+  
   const navigate = useNavigate();
 
   const addCommnet = (gameId, comment) => {

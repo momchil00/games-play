@@ -20,8 +20,8 @@ addCommnet,
     
     const addCommentHandler = (e) => {
         e.preventDefault();
-
         addCommnet(gameId, `${comment.username}: ${comment.comment}`);
+        
     }
 
     const onChange = (e) => {
@@ -47,7 +47,9 @@ addCommnet,
     }
 
 
-console.log(gameId);
+console.log(gameId, 'it me');
+console.log(game.title, 'it me 2');
+
     return (
         <section id="game-details">
             <h1>Game Details</h1>
