@@ -1,14 +1,21 @@
 import React from 'react'
+import * as gameService from '../services/gameServices';
+import { useContext } from "react";
+import { GameContext } from '../context/GameContext';
+const CreateGame = () => {
 
-const CreateGame = ({
-    addGameHandler
-}) => {
+    const {gameAdd} = useContext(GameContext);
 
     const onSubmit = (e) => {
         e.preventDefault();
 
         const gameData = Object.fromEntries(new FormData(e.target));
-        addGameHandler(gameData)
+
+        gameService.create(gameData)
+            .then(result => {
+                gameAdd(result)
+            })
+
 
 
     }
