@@ -12,11 +12,14 @@ import { useEffect, useState } from 'react';
 import * as gameServices from '../src/services/gameServices';
 import GameDetails from './components/GameDetails';
 import uniqid from 'uniqid';
+import useLocalStorage from './hooks/useLocalStorage';
 
 
 function App() {
   const [games, setGames] = useState([]);
-  const [auth,setAuth] = useState({});
+
+  const [auth,setAuth] = useLocalStorage('auth',{});
+
   const navigate = useNavigate();
 
 
