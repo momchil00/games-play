@@ -1,7 +1,9 @@
 import './App.css';
 import Header from './components/Header';
 import Home from './components/Home';
-import {Routes,Route, useNavigate} from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import { AuthContext } from './context/AuthContext';
+import Logout from './components/Logout';
 import Login from './components/Login';
 import Register from './components/Register';
 import CreateGame from './components/CreateGame';
@@ -11,10 +13,20 @@ import * as gameServices from '../src/services/gameServices';
 import GameDetails from './components/GameDetails';
 import uniqid from 'uniqid';
 
+
 function App() {
   const [games, setGames] = useState([]);
-  
+  const [auth,setAuth] = useState({});
   const navigate = useNavigate();
+
+
+  const userLogin = (authData) => {
+    setAuth(authData);
+  }
+
+  const userLogout = () =>{
+    setAuth({});
+  };
 
   const addCommnet = (gameId, comment) => {
     setGames(state => {
@@ -23,7 +35,7 @@ function App() {
       comments.push(comment)//dobavqme noviq komentar
       return [//tova promenq state 
         ...state.filter(x => x._id !== gameId),//pusni vsichki igri koito ne otgovarqt na tazi koqto iskame da dobawim 
-        {...game.comments},//dobavi nov obekt kato i dobavq noviq komentar
+        { ...game.comments },//dobavi nov obekt kato i dobavq noviq komentar
       ];
     })
   };
@@ -40,37 +52,38 @@ function App() {
     navigate('/catalog')
   };
 
-console.log(games, 'that is');
+  console.log(games, 'that is');
 
   useEffect(() => {
-      gameServices.getAll()
-          .then(result => {
-              setGames(result);
-          })
+    gameServices.getAll()
+      .then(result => {
+        setGames(result);
+      })
   }, []);
 
-  
+
 
   return (
-    <div id="box">
-      <Header />
-      <main id="main-content">
-        <Routes>
-          <Route path="/" element ={<Home games={games}/>}/>
-          <Route path="/logout" element ={<Home />}/>
-          <Route path="/login" element ={<Login/>}/>
-          <Route path="/register" element ={<Register/>}/>
-          <Route path="/create" element ={<CreateGame addGameHandler={addGameHandler}/>}/>
-          <Route path="/catalog" element ={<Catalog games={games}/>}/>
-          <Route path="/catalog/:gameId" element ={<GameDetails games={games} addCommnet={addCommnet}/>}/>
+    <AuthContext.Provider value ={{user: auth, userLogin, userLogout}}>
+      <div id="box">
+        <Header />
+        <main id="main-content">
+          <Routes>
+            <Route path="/" element={<Home games={games} />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/create" element={<CreateGame addGameHandler={addGameHandler} />} />
+            <Route path="/catalog" element={<Catalog games={games} />} />
+            <Route path="/catalog/:gameId" element={<GameDetails games={games} addCommnet={addCommnet} />} />
 
-        </Routes>
+          </Routes>
 
-      </main>
+        </main>
 
 
-    </div>
-
+      </div>
+    </AuthContext.Provider>
   );
 
 }
@@ -78,7 +91,7 @@ console.log(games, 'that is');
 export default App;
 
 
-{/* Edit Page ( Only for the creator )*/}
+{/* Edit Page ( Only for the creator )*/ }
 {/*
 <section id="edit-page" className="auth">
   <form id="edit">

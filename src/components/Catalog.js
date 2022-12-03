@@ -20,3 +20,12 @@ const Catalog = ({
 };
 
 export default Catalog;
+
+{/*
+{games.length > 0
+    ? games.map(x => <CatalogItem game={x} key={x._id}/>)
+    : <h3 className="no-articles">No articles yet</h3>
+
+}
+
+*/}
