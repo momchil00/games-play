@@ -9,11 +9,15 @@ export const GameContext = createContext();
 const gameReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_GAMES':
-      return [...action.payload];
+      return action.payload.map(x => ({ ...x, comments: [] }));
     case 'ADD_GAME':
       return [...state, action.payload];
+    case 'FETCH_GAME_DETAILS':
     case 'EDIT_GAME':
       return state.map(x => x._id === action.gameId ? action.payload : x);
+    case 'ADD_COMMENT':
+      return state.map(x => x._id === action.gameId ? { ...x, comments: [x.comments, action.payload] } : x);
+
     default:
       return state;
   }
@@ -41,6 +45,11 @@ export const GameProvider = ({
       });
   }, []);
 
+
+  const selectGame = (gameId) => {
+    return games.find(x => x._id === gameId) || {};
+  };
+
   const addCommnet = (gameId, comment) => {
     //  setGames(state => {
     //   const game = state.find(x => x._id === gameId);//namira id-to na igrata koqto e v momenta(na koqto iskame da dobavi komentar)
@@ -51,11 +60,28 @@ export const GameProvider = ({
     //      { ...game.comments },//dobavi nov obekt kato i dobavq noviq komentar
     //    ];
     //   })
+
+    dispatcher({
+      type: 'ADD_COMMENT',
+      payload: comment,
+      gameId,
+    })
+
   };
+
+  const fetchGameDetails = (gameId, gameDetails) => {
+    dispatcher({
+      type: 'FETCH_GAME_DETAILS',
+      payload: gameDetails,
+      gameId,
+
+    })
+  }
+
 
   const gameAdd = (gameData) => {
     dispatcher({
-      type: 'ADD_GAME',
+      type: 'ADD_GAME',//magic string
       payload: gameData
     })
     navigate('/catalog')
@@ -72,7 +98,7 @@ export const GameProvider = ({
   }
 
   return (
-    <GameContext.Provider value={{ games, gameAdd, gameEdit, addCommnet }}>
+    <GameContext.Provider value={{ games, gameAdd, gameEdit, addCommnet, fetchGameDetails, selectGame }}>
       {children}
     </GameContext.Provider>
   )

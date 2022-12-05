@@ -2,59 +2,39 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import { GameContext } from '../context/GameContext';
 import * as gameService from '../services/gameServices';
+import * as commentService from '../services/commentsService';
+
 const GameDetails = () => {
 
-  const {addCommnet} = useContext(GameContext);
+  const { addCommnet, fetchGameDetails, selectGame } = useContext(GameContext);
   const { gameId } = useParams();
-  const [currentGame, setCurrentGame] = useState({});
 
-  const [comment, setComment] = useState({
-    username: '',
-    comment: '',
-  });
+  const currentGame = selectGame(gameId);
+
 
   useEffect(() => {
-    gameService.getOne(gameId)
-      .then(result => {
-        setCurrentGame(result);
-      })
-  })
+    (async () => {
+      const gameDetails = await gameService.getOne(gameId);
+      const gameComments = await commentService.getByGameId(gameId);
+      fetchGameDetails(gameId, {...gameDetails, comments: gameComments.map(x => `${x.user.email}:${x.text}`)});
 
-  const [error, setError] = useState({
-    username: '',
-    comment: '',
-  });
-
-
+    })();
+  }, [])
 
   const addCommentHandler = (e) => {
     e.preventDefault();
-    addCommnet(gameId, `${comment.username}: ${comment.comment}`);
 
-  }
+    const formData = new FormData(e.target);
 
-  const onChange = (e) => {
-    e.preventDefault();
+    const comment = formData.get('comment');
+    //addCommnet(gameId, `${comment.username}: ${comment.comment}`);
 
-    setComment(state => ({
-      ...state,
-      [e.target.name]: e.target.value
+    commentService.create(gameId, comment)
+      .then(result => {
+        addCommnet(gameId, comment);
+      });
 
-
-    }));
   };
-
-  const validateUsername = (e) => {
-    const username = e.target.value;
-
-    if (username == e.target.length < 4) {
-      setError(state => ({
-        ...state,
-        username: 'Username must ber longer than 3 symbols'
-      }));
-    }
-  };
-
 
 
   return (
@@ -62,7 +42,7 @@ const GameDetails = () => {
       <h1>Game Details</h1>
       <div className="info-section">
         <div className="game-header">
-          <img className="game-img" src={currentGame.imageUrl} alt=""/>
+          <img className="game-img" src={currentGame.imageUrl} alt="" />
           <h1>{currentGame.title}</h1>
           <span className="levels">MaxLevel:{currentGame.maxLevel}</span>
           <p className="type">{currentGame.category}</p>
@@ -73,16 +53,17 @@ const GameDetails = () => {
         {/* Bonus ( for Guests and Users ) */}
         <div className="details-comments">
           <h2>Comments:</h2>
-          {/*
-                        {currentGame.comments?.map(x =>
-                            <li className="comment" >
-                                <p>{x}</p>
-                            </li>
-                            )}
-                    </ul>
-                    {currentGame.comments &&
-                    <p className="no-comment">No comments.</p>
-                    */}
+          <ul>
+            {currentGame.comments?.map(x =>
+              <li key ={x.id} className="comment" >
+                <p>{x}</p>
+              </li>
+            )}
+          </ul>
+
+          {!currentGame.comments &&
+            <p className="no-comment">No comments.</p>
+          }
 
           {/* Display paragraph: If there are no games in the database */}
         </div>
@@ -101,20 +82,10 @@ const GameDetails = () => {
       <article className="create-comment">
         <label>Add new comment:</label>
         <form className="form" onSubmit={addCommentHandler}>
-          <input
-            type="text"
-            name="username"
-            placeholder="John Doe"
-            onChange={onChange}
-            onBlur={validateUsername}
-            value={comment.username}
 
-          />
           <textarea
             name="comment"
             placeholder="Comment......"
-            onChange={onChange}
-            value={comment.comment}
           />
           <input
             className="btn submit"
@@ -123,7 +94,7 @@ const GameDetails = () => {
           />
         </form>
       </article>
-    </section>
+    </section >
   );
 };
 
