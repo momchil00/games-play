@@ -29,6 +29,17 @@ export const AuthProvider = ({
 //    const context = useContext(AuthContext);
 
 //    return context
-//}
-
+//};
 //CUTOM HOOK 
+
+
+
+export const withAuth = (Component) => {//funkciq koqto priema i vrushrta komponent
+  const WrapperComponent = (props) => {
+    const context = useContext(AuthContext);
+
+    return <Component {...props} auth={context} />
+  }
+  return WrapperComponent;
+}
+//with HOC
