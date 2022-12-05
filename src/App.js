@@ -2,7 +2,7 @@ import './App.css';
 import Header from './components/Header';
 import Home from './components/Home';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { AuthContext } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import Logout from './components/Logout';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -11,25 +11,13 @@ import Catalog from './components/Catalog';
 import { useEffect, useState } from 'react';
 import * as gameServices from '../src/services/gameServices';
 import GameDetails from './components/GameDetails';
-import useLocalStorage from './hooks/useLocalStorage';
 import { GameContext } from './context/GameContext';
 import EditGame from './components/EditGame';
 
 function App() {
   const [games, setGames] = useState([]);
 
-  const [auth, setAuth] = useLocalStorage('auth', {});
-
   const navigate = useNavigate();
-
-
-  const userLogin = (authData) => {
-    setAuth(authData);
-  }
-
-  const userLogout = () => {
-    setAuth({});
-  };
 
   const addCommnet = (gameId, comment) => {
     setGames(state => {
@@ -52,11 +40,9 @@ function App() {
     navigate('/catalog')
   };
 
-  console.log(games, 'that is');
-
 
   const gameEdit = (gameId, gameData) => {
-    setGames(state => state.map(x => x._id === gameId ? gameData: x));
+    setGames(state => state.map(x => x._id === gameId ? gameData : x));
   }
 
   useEffect(() => {
@@ -69,18 +55,18 @@ function App() {
 
 
   return (
-    <AuthContext.Provider value={{ user: auth, userLogin, userLogout }}>
+    <AuthProvider>
       <div id="box">
         <Header />
-        <GameContext.Provider value ={{games, gameAdd,gameEdit}}>
+        <GameContext.Provider value={{ games, gameAdd, gameEdit }}>
           <main id="main-content">
             <Routes>
               <Route path="/" element={<Home games={games} />} />
               <Route path="/logout" element={<Logout />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/create" element={<CreateGame/>} />
-              <Route path="/games/:gameId/edit" element={<EditGame/>} />
+              <Route path="/create" element={<CreateGame />} />
+              <Route path="/games/:gameId/edit" element={<EditGame />} />
               <Route path="/catalog" element={<Catalog games={games} />} />
               <Route path="/catalog/:gameId" element={<GameDetails games={games} addCommnet={addCommnet} />} />
 
@@ -91,7 +77,7 @@ function App() {
 
 
       </div>
-    </AuthContext.Provider>
+    </AuthProvider>
   );
 
 }
