@@ -5,23 +5,23 @@ export const AuthContext = createContext();
 
 
 export const AuthProvider = ({
-    children,
+  children,
 }) => {
-    const [auth, setAuth] = useLocalStorage('auth', {});
+  const [auth, setAuth] = useLocalStorage('auth', {});
 
-    const userLogin = (authData) => {
-        setAuth(authData);// setvame ssesion data
-      }
-    
-      const userLogout = () => {
-        setAuth({});//mahame ssesion data
-      };
+  const userLogin = (authData) => {
+    setAuth(authData);// setvame ssesion data
+  }
 
-    return (
-        <AuthContext.Provider value={{ user: auth, userLogin, userLogout }}>
-            {children}
-        </AuthContext.Provider>
-    )
+  const userLogout = () => {
+    setAuth({});//mahame ssesion data
+  };
+
+  return (
+    <AuthContext.Provider value={{ user: auth, userLogin, userLogout }}>
+      {children}
+    </AuthContext.Provider>
+  )
 };
 
 

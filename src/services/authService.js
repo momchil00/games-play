@@ -6,22 +6,22 @@ export const login = (email, password) => request.post(`${baseUrl}/login`, { ema
 
 
 export const logout = async (accessToken) => {
-    //request.get(`${baseUrl}/logout`);
-    try {
+  //request.get(`${baseUrl}/logout`);
+  try {
 
-        const response = await fetch(`${baseUrl}/logout`, {
-            headers: {
-                'X-Authorization': accessToken
-            }
-        });
+    const response = await fetch(`${baseUrl}/logout`, {
+      headers: {
+        'X-Authorization': accessToken
+      }
+    });
 
 
-        return response;
-    } catch (error) {
-        console.log(error);
-    }
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
 
 };
 
-export const register = async (email,password) => request.post(`${baseUrl}/register`, {email,password});
+export const register = async (email, password) => request.post(`${baseUrl}/register`, { email, password });
 

@@ -32,7 +32,6 @@ function App() {
   };
 
   const gameAdd = (gameData) => {
-
     setGames(state => [
       ...state,
       gameData,
@@ -49,7 +48,7 @@ function App() {
     gameServices.getAll()
       .then(result => {
         setGames(result);
-      })
+      });
   }, []);
 
 
