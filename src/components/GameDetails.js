@@ -54,7 +54,7 @@ const GameDetails = ({
         username: 'Username must ber longer than 3 symbols'
       }));
     }
-  }
+  };
 
 
 
@@ -63,7 +63,7 @@ const GameDetails = ({
       <h1>Game Details</h1>
       <div className="info-section">
         <div className="game-header">
-          <img className="game-img" src={currentGame.imageUrl} />
+          <img className="game-img" src={currentGame.imageUrl} alt=""/>
           <h1>{currentGame.title}</h1>
           <span className="levels">MaxLevel:{currentGame.maxLevel}</span>
           <p className="type">{currentGame.category}</p>
