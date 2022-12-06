@@ -11,9 +11,11 @@ import Catalog from './components/Catalog';
 import GameDetails from './components/GameDetails';
 import { GameProvider } from './context/GameContext';
 import EditGame from './components/EditGame';
+import PrivateRoute from './components/common/PrivateRoute';
+import RouteGuard from './components/common/RouteGuard';
 
 function App() {
-  
+
   return (
     <AuthProvider>
       <div id="box">
@@ -21,14 +23,16 @@ function App() {
         <GameProvider>
           <main id="main-content">
             <Routes>
-              <Route path="/" element={<Home/>} />
-              <Route path="/logout" element={<Logout/>} />
-              <Route path="/login" element={<Login/>} />
-              <Route path="/register" element={<Register/>} />
-              <Route path="/create" element={<CreateGame/>} />
-              <Route path="/games/:gameId/edit" element={<EditGame/>} />
-              <Route path="/catalog" element={<Catalog/>} />
-              <Route path="/catalog/:gameId" element={<GameDetails/>} />
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/create" element={(<PrivateRoute><CreateGame /></PrivateRoute>)} />
+              <Route element={<RouteGuard />} >
+                <Route path="/games/:gameId/edit" element={<EditGame />} />
+                <Route path="/logout" element={<Logout />} />
+              </Route>
+              <Route path="/catalog" element={<Catalog />} />
+              <Route path="/catalog/:gameId" element={<GameDetails />} />
 
             </Routes>
 

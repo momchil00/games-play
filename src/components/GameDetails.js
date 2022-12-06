@@ -1,22 +1,23 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { GameContext } from '../context/GameContext';
 import * as gameService from '../services/gameServices';
 import * as commentService from '../services/commentsService';
 
 const GameDetails = () => {
 
-  const { addCommnet, fetchGameDetails, selectGame } = useContext(GameContext);
+  const { addCommnet, fetchGameDetails, selectGame, gameRemove } = useContext(GameContext);
   const { gameId } = useParams();
 
   const currentGame = selectGame(gameId);
 
+  const navigate = useNavigate;
 
   useEffect(() => {
     (async () => {
       const gameDetails = await gameService.getOne(gameId);
       const gameComments = await commentService.getByGameId(gameId);
-      fetchGameDetails(gameId, {...gameDetails, comments: gameComments.map(x => `${x.user.email}:${x.text}`)});
+      fetchGameDetails(gameId, { ...gameDetails, comments: gameComments.map(x => `${x.user.email}:${x.text}`) });
 
     })();
   }, [])
@@ -35,6 +36,21 @@ const GameDetails = () => {
       });
 
   };
+
+  const gameDeleteHandler = () => {
+    const confirmation =  window.confirm('Are you sure you want to delete this game?');
+    if(confirmation) {
+      gameService.remove(gameId)
+      .then(() => {
+        gameRemove(gameId);
+        navigate('/catalog')
+
+      })
+    }
+
+  };
+
+
 
 
   return (
@@ -55,7 +71,7 @@ const GameDetails = () => {
           <h2>Comments:</h2>
           <ul>
             {currentGame.comments?.map(x =>
-              <li key ={x.id} className="comment" >
+              <li key={x.id} className="comment" >
                 <p>{x}</p>
               </li>
             )}
@@ -72,9 +88,9 @@ const GameDetails = () => {
           <Link to={`/games/${gameId}/edit`} className="button">
             Edit
           </Link>
-          <a href="/#" className="button">
+          <button onClick={gameDeleteHandler} className="button">
             Delete
-          </a>
+          </button>
         </div>
       </div>
       {/* Bonus */}
